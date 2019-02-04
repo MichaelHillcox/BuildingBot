@@ -1,16 +1,27 @@
+const Config = require('./config')
+const ScanForReferences = require('./Utils').scanForReference
+const Discord = require('discord.js')
 class Bot {
-    constructor(client) {
-        this.client = client
+    constructor() {
+        this.client = new Discord.Client()
+        this.login()
+        
+        this.client.on('ready', this.botInit.bind(this))
+        this.client.on('message', this.handleMessage.bind(this))
+    }
 
-        this.client.on('ready', this.botInit)
-        this.client.on('message', this.handleMessage)
+    login() {
+        this.client.login(Config.discord.token)
     }
 
     botInit() {
-        console.log(`Logged in as ${client.user.tag}!`);        
+        console.log(`Logged in as ${this.client.user.tag}!`);        
     }
 
     handleMessage(msg) {
+        if( this.client.user.id === msg.author.id ) 
+            return;
+
         if( msg.channel.id === Config.discord.channels.issues )
             this.issues(msg);
         
@@ -18,11 +29,14 @@ class Bot {
             this.prs(msg);
     }
 
-    issues = (msg) => {
-        console.log(msg)
+    issues(msg) {
+        const refs = ScanForReferences(msg.content)
+        refs.map(e => {
+            msg.reply("Found: "+e)
+        })
     }
     
-    prs = (msg) => {
+    prs(msg) {
         console.log("hi pr", msg)
     }
 }

@@ -7,7 +7,7 @@ module.exports.scanForReference = (msg) => {
             reg.lastIndex++;
         }
         
-        m.forEach((match, groupIndex) => matches.push(match));
+        m.forEach((match) => matches.push(match));
     }
 
     return matches
