@@ -29,17 +29,30 @@ class Bot {
             this.issues(msg);
     }
 
-    issues(msg) {
+    async issues(msg) {
         const refs = ScanForReferences(msg.content)
         if( refs.length === 0 )
             return;
 
         msg.channel.send(`${refs.length} ${refs.length === 1 ? 'issue has' : 'issues have'} been referenced`)
-        refs.map(e => {
-            let number = e.replace("#", "")
+        
+        const messages = refs.map( async e => {
+            const number = e.replace("#", "")
+            return this.createMessage(number).catch(e => console.log(e));
+        })
 
+        Promise.all(messages).then((e) => {
+            let prs = [], issues = [];
+            e.forEach()
+            e.forEach((e) => msg.channel.send(e))
+        })
+    }
+
+    async createMessage(number) {
+        return new Promise((resolve, reject) => {
             axios.get(`${Config.api.github}repos/${Config.github.owner}/${Config.github.repo}/issues/${number}`).then(e => {
-                msg.channel.send({
+                
+                resolve({isPr: ,message:{
                     embed: {
                         author: {
                             name: this.client.user.username + " Issue Linker",
@@ -49,25 +62,20 @@ class Bot {
                         description: e.data.body.length > 220 ? e.data.body.substring(0, 220) + '...' : e.data.body,
                         url: e.data.url,
                         fields: [{
-                            name: "Created: ",
-                            value: moment(e.data.created_at).fromNow(),
-                            inline: true
-                          },
-                          {
-                            name: "Is Pull request?",
-                            value: (typeof e.data.pull_request !== undefined) ? 'Yup' : 'No',
-                            inline: true
-                          },
-                          {
-                            name: "Labels: ",
-                            value: e.data.labels.map((e) => e.name).join(", "),
-                            inline: true
-                          },
+                                name: "Created: ",
+                                value: moment(e.data.created_at).fromNow(),
+                                inline: true
+                            },
+                            {
+                                name: "Labels: ",
+                                value: e.data.labels.map((e) => e.name).join(", "),
+                                inline: true
+                            },
                         ],
                     }
-                })
-
-            }).catch((e) => console.log(e))
+                }});
+    
+            }).catch((e) => reject(e))
         })
     }
 }
