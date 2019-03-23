@@ -83,7 +83,7 @@ class Bot {
                             },
                             {
                                 name: "Labels: ",
-                                value: e.data.labels.map((e) => e.name).join(", "),
+                                value: e.data.labels.length !== 0 ? e.data.labels.map((e) => e.name).join(", ") : 'N/a',
                                 inline: true
                             },
                         ],
