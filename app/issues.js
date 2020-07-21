@@ -6,7 +6,10 @@ const bot = require('../bot')
 const ScanForReferences = require('./../Utils').scanForReference
 
 module.exports = class Issues {
-  constructor() {}
+  constructor() {
+    this.command = "{#issue_id}";
+    this.description = "This is not a command, use by typing #number anywhere in your message."
+  }
 
   parse(msg) {
     const refs = ScanForReferences(msg.content)

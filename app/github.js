@@ -9,7 +9,8 @@ class Github {
         auth: {
           username: 'michaelhillcox',
           password: Config.api.github.token
-        }
+        },
+        accept: 'application/vnd.github.v3+json'
       }
     });
 
@@ -28,6 +29,10 @@ class Github {
 
   async getMilestone(id) {
     return this.instance.get(`repos/${Config.github.owner}/${Config.github.repo}/issues?milestone=${id}&state=all`)
+  }
+
+  async getCommit(sha) {
+    return this.instance.get(`repos/${Config.github.owner}/${Config.github.repo}/commits/${sha}`)
   }
 
   logAndNull(e) {
