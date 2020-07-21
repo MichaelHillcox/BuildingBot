@@ -37,6 +37,7 @@ module.exports = class Commits {
     `;
     msg.channel.send(
       new MessageEmbed()
+        .setColor('#00a8ff')
         .setAuthor(commit.author.login, commit.author.avatar_url, commit.author.html_url)
         .setTitle(title)
         .setURL(commit.html_url)

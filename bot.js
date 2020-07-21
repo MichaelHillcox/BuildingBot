@@ -3,6 +3,7 @@ const Discord = require('discord.js')
 const Issues = require('./app/issues');
 const Milestone = require('./app/milestone');
 const Commits = require('./app/commits');
+const Mods = require('./app/mods');
 
 class Bot {
   constructor() {
@@ -11,6 +12,7 @@ class Bot {
       new Issues(),
       new Milestone(),
       new Commits(),
+      new Mods(),
     ]
 
     this.login()
