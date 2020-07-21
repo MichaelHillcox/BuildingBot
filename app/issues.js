@@ -42,7 +42,6 @@ module.exports = class Issues {
     }
 
     const data = issue.data;
-
     msg.channel.send(
       new MessageEmbed()
         .setColor(data.state === 'closed' ? 14432055 : (data.pull_request ? 2932302 : 3558108))
@@ -51,7 +50,7 @@ module.exports = class Issues {
         .setDescription(data.body.length > 220 ? data.body.substring(0, 220) + '...' : data.body)
         .setURL(data.html_url)
         .addField("Created:", moment(data.created_at).fromNow(), true)
-        .addField("Labels:", !data.labels ? "N/a" : data.labels.map(e => `[${e.name}](${github.createLabelLink(e.name)})`).join(', '), true)
+        .addField("Labels:", !data.labels.length ? "N/a" : data.labels.map(e => `[${e.name}](${github.createLabelLink(e.name)})`).join(', '), true)
     );
   }
 
