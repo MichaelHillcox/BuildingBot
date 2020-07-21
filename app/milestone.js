@@ -3,7 +3,10 @@ const moment = require('moment')
 const { MessageEmbed } = require("discord.js");
 
 module.exports = class Milestone {
-  constructor() {}
+  constructor() {
+    this.command = "!milestone {milestone_id}";
+    this.description = "Displayed a detailed breakdown of a milestone"
+  }
 
   async parse(msg) {
     const content = msg.content;
@@ -36,18 +39,18 @@ module.exports = class Milestone {
 
     issues.forEach(e => e.state === 'open' ? openIssues.push(e) : closedIssues.push(e))
 
+    const description = `${milestone.description}\n
+      **Open Issues(${openIssues.length})**: ${openIssues.length ? openIssues.map(e => `[#${e.number}](${e.html_url})`).join(', ') : 'None'}
+      **Closed Issues(${closedIssues.length})**: ${closedIssues.length ? closedIssues.map(e => `[#${e.number}](${e.html_url})`).join(', ') : 'None'}
+    _____`
+
     msg.channel.send(
       new MessageEmbed()
         .setAuthor(milestone.creator.login, milestone.creator.avatar_url, milestone.creator.html_url)
         .setColor(milestone.state === 'open' ? '#12FF50' : '#FF5050')
         .setTitle(`[${milestone.state === 'open' ? 'Open' : 'Closed'}] ${milestone.title}`)
         .setURL(milestone.html_url)
-        .setDescription(`
-          ${milestone.description}\n
-          **Open Issues(${openIssues.length})**: ${openIssues.length ? openIssues.map(e => `[#${e.number}](${e.html_url})`).join(', ') : 'None'}
-          **Closed Issues(${closedIssues.length})**: ${closedIssues.length ? closedIssues.map(e => `[#${e.number}](${e.html_url})`).join(', ') : 'None'}
-          _____
-        `)
+        .setDescription(description.length > 2000 ? description.substr(0, 2000) + "..." : description)
         .addField('Complete', `${this.milestoneProgress(milestone, issues.length)}%`, true)
         .addField('Due', milestone.due ? moment(milestone.due).fromNow() : 'No due date', true)
         .addField('Created / Closed', milestone.closed_at ? `Closed ${moment(milestone.closed_at).fromNow()}`: `Created ${moment(milestone.created_at).fromNow()}`, true)
