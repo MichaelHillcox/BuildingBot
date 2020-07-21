@@ -29,13 +29,7 @@ module.exports = class Issues {
   }
 
   async sendMessages(msg, id) {
-    let issue = null;
-    try {
-      issue = await github.getIssue(id);
-    } catch(e) {
-      console.error(e)
-      return;
-    }
+    let issue = await github.getIssue(id).catch(github.logAndNull);
 
     if (issue === null) {
       return;

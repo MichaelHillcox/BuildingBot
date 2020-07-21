@@ -12,6 +12,14 @@ class Github {
         }
       }
     });
+
+    this.instance.interceptors.response.use(null, (error) => {
+      // Do something with response error
+      return Promise.reject({
+        error,
+        data: error.response.data || null
+      });
+    });
   }
 
   async getIssue(id) {
@@ -19,7 +27,12 @@ class Github {
   }
 
   async getMilestone(id) {
-    return this.instance.get(`repos/${Config.github.owner}/${Config.github.repo}/issues/${id}`)
+    return this.instance.get(`repos/${Config.github.owner}/${Config.github.repo}/issues?milestone=${id}&state=all`)
+  }
+
+  logAndNull(e) {
+    console.log(e.data);
+    return null;
   }
 
   createLabelLink(label) {
