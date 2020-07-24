@@ -2,10 +2,11 @@ const curse = require("./curse");
 const { MessageEmbed } = require("discord.js");
 const prettyBytes = require('pretty-bytes');
 const moment = require('moment');
+const modinfo = require("./modinfo");
 
 module.exports = class Mods {
   constructor() {
-    this.types = ['info', 'stats', 'files'];
+    this.types = ['info', 'stats', 'files', 'links'];
     this.command = `!mod {${Object.keys(curse.mods).join('|')}} {${this.types.join('|')}}`;
     this.description = "Shows information from Curse regarding our mods"
   }
@@ -38,6 +39,8 @@ module.exports = class Mods {
   async curseMessage(msg, mod, type) {
     const selectedMod = curse.mods[mod];
     
+    const firstValid = (e) => e.find(a => a.gameVersion.includes('1.'))
+
     const modInfo = await curse.getModInfo(selectedMod);
     if (modInfo == null) {
       msg.channel.send("Something went wrong, contact <@196688486357663744>")
@@ -49,9 +52,8 @@ module.exports = class Mods {
       return;
     }
 
-    const firstValid = (e) => e.find(a => a.gameVersion.includes('1.'))
+    // console.dir(modInfo, { depth: null });
     if (type === 'files') {
-      console.dir(modInfo, { depth: null });
 
       const versionedFiles = {};
       modInfo.latestFiles.forEach(e => {
@@ -77,7 +79,52 @@ module.exports = class Mods {
         `, false);
       });
 
-      msg.channel.send(embed)
+      msg.channel.send(embed);
+      return;
     }
+
+    if (type === 'info') {
+      const files = await curse.getModFiles(selectedMod);
+
+      console.dir(files, { depth: null });
+      const totalFiles = files.reduce((total, e) => total + 1, 0);
+
+      const versions = [];
+      files.forEach(e => {
+        const valid = e.gameVersion.find(a => a.includes('1.'));
+        if (!versions.includes(valid)) {
+          versions.push(valid);
+        }
+      });
+
+      versions.sort();
+
+      msg.channel.send(
+        new MessageEmbed()
+          .setTitle(`${selectedMod.name}'s Info`)
+          .setURL(modInfo.websiteUrl)
+          .setDescription(`
+            ${modInfo.summary}. ${selectedMod.name} has **${modInfo.downloadCount.toLocaleString()}** downloads over **${totalFiles}** releases and has been released for Minecraft **${versions.join('**, **')}**\n
+            Created by [Direwolf20](https://www.curseforge.com/members/22300-direwolf20?username=direwolf20) and maintained by ${modInfo.authors.filter(e => e.userId !== 22300).map(e => `[${e.name}](${e.url})`).join(', ')}
+          `)
+          .addField('Links', this.getLinks(selectedMod, modInfo))
+      )
+    }
+
+    if (type === 'links') {
+      msg.channel.send(
+        new MessageEmbed()
+          .setTitle(`${selectedMod.name}'s Links`)
+          .setDescription(this.getLinks(selectedMod, modInfo))
+      );
+    }
+  }
+
+  getLinks(selectedMod, modInfo) {
+    const github = modinfo[selectedMod.short].github;
+    return `[Repo](${github}), [Issues](${github}/issues), ` +
+    `[Pull Requests](${github}/pulls), [Milestones](${github}/milestones), ` +
+    `[Github Releases](${github}/releases), [Curse Forge](${modInfo.websiteUrl}), [Curse Forge all files](${modInfo.websiteUrl}/files/all), ` + 
+    `[Wiki](${modinfo[selectedMod.short].wiki}), [Changelog(s)](${modinfo[selectedMod.short].changelog})`;
   }
 }

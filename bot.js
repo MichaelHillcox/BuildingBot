@@ -15,9 +15,10 @@ class Bot {
       new Mods(),
     ]
 
-    this.login()
+    this.client.once('ready', () => {
+      console.log(`Logged in as ${this.client.user.tag}!`);        
+    });
 
-    this.client.on('ready', this.botInit.bind(this))
     this.client.on('message', this.handleMessage.bind(this))
 
     // Handle random bot timeout crashes
@@ -25,15 +26,9 @@ class Bot {
 
     // Handle shard errors
     this.client.on('shardError', error => console.warn('A websocket connection encountered an error:' + error));
-  }
-  
-  login() {
-    this.client.login(Config.discord.token)
-  }
-  
-  botInit() {
-    console.log(`Logged in as ${this.client.user.tag}!`);        
-  }
+
+    this.client.login(Config.discord.token);
+  }  
   
   handleMessage(msg) {
     if( this.client.user.id === msg.author.id || msg.author.bot )

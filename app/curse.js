@@ -40,6 +40,25 @@ class Curse {
 
     return this.cache.get(key);
   }
+  
+  async getModFiles(mod) {
+    const key = `curse-${mod.short}-files`;
+    if (!this.cache.has(key)) {
+      try {
+        const res = await this.instance.get(`addon/${mod.id}/files`, 60 * 60 * 24); // Days
+        if (res.data === null) {
+          return null;
+        }
+
+        this.cache.set(key, res.data)
+        return res.data;
+      } catch {
+        return null;
+      }
+    }
+
+    return this.cache.get(key);
+  }
 
   getProjectUrl(mod) {
     return `https://www.curseforge.com/minecraft/mc-mods/${mod.slug}`
