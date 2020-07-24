@@ -4,8 +4,10 @@ const Issues = require('./app/issues');
 const Milestone = require('./app/milestone');
 const Commits = require('./app/commits');
 const Mods = require('./app/mods');
+const Help = require('./app/help');
 
 class Bot {
+
   constructor() {
     this.client = new Discord.Client()
     this.commands = [
@@ -13,7 +15,8 @@ class Bot {
       new Milestone(),
       new Commits(),
       new Mods(),
-    ]
+      new Help(),
+    ];
 
     this.client.once('ready', () => {
       console.log(`Logged in as ${this.client.user.tag}!`);        
@@ -29,6 +32,7 @@ class Bot {
 
     this.client.login(Config.discord.token);
   }  
+
   
   handleMessage(msg) {
     if( this.client.user.id === msg.author.id || msg.author.bot )
@@ -39,4 +43,3 @@ class Bot {
 }
   
 module.exports = new Bot();
-  
