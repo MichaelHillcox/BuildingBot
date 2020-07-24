@@ -52,7 +52,6 @@ module.exports = class Mods {
       return;
     }
 
-    // console.dir(modInfo, { depth: null });
     if (type === 'files') {
 
       const versionedFiles = {};
@@ -86,7 +85,6 @@ module.exports = class Mods {
     if (type === 'info') {
       const files = await curse.getModFiles(selectedMod);
 
-      console.dir(files, { depth: null });
       const totalFiles = files.reduce((total, e) => total + 1, 0);
 
       const versions = [];

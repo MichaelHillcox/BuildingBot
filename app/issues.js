@@ -3,6 +3,7 @@ const moment = require('moment')
 const github = require('./github')
 const { MessageEmbed } = require('discord.js')
 const bot = require('../bot')
+const Milestone = require('./milestone')
 const ScanForReferences = require('./../Utils').scanForReference
 
 module.exports = class Issues {
@@ -39,15 +40,43 @@ module.exports = class Issues {
     }
 
     const data = issue.data;
-    msg.channel.send(
-      new MessageEmbed()
-        .setColor(data.state === 'closed' ? 14432055 : (data.pull_request ? 2932302 : 3558108))
-        .setAuthor(data.user.login, data.user.avatar_url, data.user.html_url)
-        .setTitle(`[${data.state}]${data.locked ? '[locked]': ''}: ${data.title}`)
-        .setDescription(data.body.length > 220 ? data.body.substring(0, 220) + '...' : data.body)
-        .setURL(data.html_url)
-        .addField("Created:", moment(data.created_at).fromNow(), true)
-        .addField("Labels:", !data.labels.length ? "N/a" : data.labels.map(e => `[${e.name}](${github.createLabelLink(e.name)})`).join(', '), true)
-    );
+
+    // Count tasks if they exist.
+    const tasks = {complete: 0, incomplete: 0};
+    data.body.split('\n').forEach(e => {
+      const line = e.trim().toLowerCase();
+      if (line.startsWith('- [ ]'))
+        tasks.incomplete ++;
+      if (line.startsWith('- [x]'))
+        tasks.complete ++;
+    });
+
+    const embed = new MessageEmbed()
+      .setColor(data.state === 'closed' ? 14432055 : (data.pull_request ? 2932302 : 3558108))
+      .setAuthor(data.user.login, data.user.avatar_url, data.user.html_url)
+      .setTitle(`[${data.state}]${data.locked ? '[locked]': ''}: ${data.title}`)
+      .setDescription(data.body.length > 220 ? data.body.substring(0, 220) + '...' : data.body)
+      .setURL(data.html_url)
+      .addField("Created", moment(data.created_at).fromNow(), true)
+
+    if (data.labels.length) {
+      embed.addField("Labels", data.labels.map(e => `[${e.name}](${github.createLabelLink(e.name)})`).join(', '), true)
+    }
+
+    if (data.assignees.length) {
+      embed.addField("Assignees", `${data.assignees.map(e => `[${e.login}](${e.html_url})`).join(', ')}`, true)
+    }
+
+    if (tasks.incomplete > 0 || tasks.complete > 0) {
+      const total = tasks.complete + tasks.incomplete;
+      embed.addField("Tasks", `${tasks.complete} of ${total} completed`, true);
+    }
+
+    if (data.milestone) {
+      const total = data.milestone.open_issues + data.milestone.closed_issues;
+      embed.addField("Milestone", `[${data.milestone.title}](${data.milestone.html_url}) (${Milestone.milestoneProgress(data.milestone, total)}%)`, true)
+    }
+
+    msg.channel.send(embed);
   }
 }

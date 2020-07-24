@@ -51,13 +51,13 @@ module.exports = class Milestone {
         .setTitle(`[${milestone.state === 'open' ? 'Open' : 'Closed'}] ${milestone.title}`)
         .setURL(milestone.html_url)
         .setDescription(description.length > 2000 ? description.substr(0, 2000) + "..." : description)
-        .addField('Complete', `${this.milestoneProgress(milestone, issues.length)}%`, true)
+        .addField('Complete', `${Milestone.milestoneProgress(milestone, issues.length)}%`, true)
         .addField('Due', milestone.due ? moment(milestone.due).fromNow() : 'No due date', true)
         .addField('Created / Closed', milestone.closed_at ? `Closed ${moment(milestone.closed_at).fromNow()}`: `Created ${moment(milestone.created_at).fromNow()}`, true)
     )
   }
 
-  milestoneProgress(milestone, issuesLength) {
+  static milestoneProgress(milestone, issuesLength) {
     if (milestone.open_issues === 0 && milestone.closed_issues)
       return 100;
 
