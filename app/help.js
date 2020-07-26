@@ -21,7 +21,7 @@ module.exports = class Help {
     msg.channel.send(
       new MessageEmbed()
         .setDescription(`Our bot is still being worked on, if you find any issues then let one of the team know :D\n`+
-        `**Commands**\n${commands.map(e => `*${e.command}* - ${e.description}`).join('\n')}`)
+        `**Commands**\n${commands.filter(e => !e.requiresAdmin).map(e => `*${e.command}* - ${e.description}`).join('\n')}`)
     )
   }
 }

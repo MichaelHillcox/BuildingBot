@@ -4,6 +4,8 @@ const Issues = require('./app/issues');
 const Milestone = require('./app/milestone');
 const Commits = require('./app/commits');
 const Mods = require('./app/mods');
+const Echo = require('./app/echo');
+const Rules = require('./app/rules');
 const Help = require('./app/help');
 
 class Bot {
@@ -15,6 +17,8 @@ class Bot {
       new Milestone(),
       new Commits(),
       new Mods(),
+      new Rules(),
+      new Echo(),
       new Help(),
     ];
 
