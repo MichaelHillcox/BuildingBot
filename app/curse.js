@@ -3,7 +3,9 @@ const NodeCache = require("node-cache");
 
 class Curse {
   constructor() {
-    this.cache = new NodeCache();
+    this.cache = new NodeCache({
+      stdTTL: 60 * 60 * 12, 
+    });
 
     this.instance = Axios.create({
       baseURL: 'https://addons-ecs.forgesvc.net/api/v2/'
@@ -26,7 +28,7 @@ class Curse {
     const key = `curse-${mod.short}`;
     if (!this.cache.has(key)) {
       try {
-        const res = await this.instance.get(`addon/${mod.id}`, 60 * 60); // keep for an hour
+        const res = await this.instance.get(`addon/${mod.id}`); // keep for an hour
         if (res.data === null) {
           return null;
         }
@@ -45,7 +47,7 @@ class Curse {
     const key = `curse-${mod.short}-files`;
     if (!this.cache.has(key)) {
       try {
-        const res = await this.instance.get(`addon/${mod.id}/files`, 60 * 60 * 24); // Days
+        const res = await this.instance.get(`addon/${mod.id}/files`);
         if (res.data === null) {
           return null;
         }
