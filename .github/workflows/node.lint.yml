@@ -30,6 +30,6 @@ jobs:
       uses: appleboy/ssh-action@v0.1.3
       with:
         host: ${{ secrets.HOST }}
-        user: ${{ secrets.USER }}
+        username: ${{ secrets.USER }}
         key: ${{ secrets.KEY }}
         script: /home/${{ secrets.USER }}/node/buildingbot/deploy.sh
