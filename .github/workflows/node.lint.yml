@@ -1,4 +1,4 @@
-ame: Bot linter & Deploy
+name: Bot linter & Deploy
 
 on:
   push:
