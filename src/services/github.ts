@@ -4,7 +4,6 @@ import Config from '../config';
 class Github {
   private request = request.defaults({
     headers: {
-      authorization: `token ${Config.github.token}`,
       accept: 'application/vnd.github.v3+json',
     },
   });
