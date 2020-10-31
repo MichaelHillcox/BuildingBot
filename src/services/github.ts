@@ -8,31 +8,37 @@ class Github {
       headers: {
         auth: {
           username: 'michaelhillcox',
-          password: Config.api.github.token
+          password: Config.api.github.token,
         },
-        accept: 'application/vnd.github.v3+json'
-      }
+        accept: 'application/vnd.github.v3+json',
+      },
     });
 
     this.instance.interceptors.response.use(null, (error) => {
       // Do something with response error
       return Promise.reject({
         error,
-        data: error.response.data || null
+        data: error.response.data || null,
       });
     });
   }
 
   async getIssue(id) {
-    return this.instance.get(`repos/${Config.github.owner}/${Config.github.repo}/issues/${id}`)
+    return this.instance.get(
+      `repos/${Config.github.owner}/${Config.github.repo}/issues/${id}`
+    );
   }
 
   async getMilestone(id) {
-    return this.instance.get(`repos/${Config.github.owner}/${Config.github.repo}/issues?milestone=${id}&state=all`)
+    return this.instance.get(
+      `repos/${Config.github.owner}/${Config.github.repo}/issues?milestone=${id}&state=all`
+    );
   }
 
   async getCommit(sha) {
-    return this.instance.get(`repos/${Config.github.owner}/${Config.github.repo}/commits/${sha}`)
+    return this.instance.get(
+      `repos/${Config.github.owner}/${Config.github.repo}/commits/${sha}`
+    );
   }
 
   logAndNull(e) {
@@ -41,7 +47,13 @@ class Github {
   }
 
   createLabelLink(label) {
-    return encodeURI(`https://github.com/${Config.github.owner}/${Config.github.repo}/issues?q=is:issue+is:open+label:${label.includes(" ") ? '"' + label +'"' : label}`);
+    return encodeURI(
+      `https://github.com/${Config.github.owner}/${
+        Config.github.repo
+      }/issues?q=is:issue+is:open+label:${
+        label.includes(' ') ? '"' + label + '"' : label
+      }`
+    );
   }
 }
 

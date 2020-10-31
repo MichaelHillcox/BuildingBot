@@ -3,16 +3,16 @@ module.exports = {
     token: '',
     channels: {
       issues: '',
-      pr: ''
-    }
+      pr: '',
+    },
   },
   api: {
     github: 'https://api.github.com/',
-    discord: 'https://discord.com/api/'
+    discord: 'https://discord.com/api/',
   },
   github: {
     owner: 'Direwolf20-MC',
     repo: 'BuildingGadgets',
-    token: ''
-  }
-}
+    token: '',
+  },
+};

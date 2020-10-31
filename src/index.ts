@@ -1,3 +1,3 @@
-import 'bot'
+import './bot.ts';
 
-console.log("Server started")
+console.log('Server started');

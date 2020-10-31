@@ -1,21 +1,24 @@
-import { MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
+import Command from './Command';
 
-export default class Rules {
-  constructor() {
-    this.requiresAdmin = true;
-    this.command = "!rules";
-    this.description = "Posts rules"
-  }
+export default class Rules implements Command {
+  requiresAdmin = true;
+  command = '!rules';
+  description = 'Posts rules';
 
-  async parse(msg) {
-    const content = msg.content;
-    if (!content.startsWith('!rules') || !msg.member.hasPermission('ADMINISTRATOR')) {
+  async parse(
+    message: Message,
+    content: string,
+    command: string
+  ): Promise<void> {
+    if (
+      !content.startsWith('!rules') ||
+      !message.member?.hasPermission('ADMINISTRATOR')
+    ) {
       return;
     }
 
-    const rules = new MessageEmbed()
-      .setTitle('Rules')
-      .setDescription(`
+    const rules = new MessageEmbed().setTitle('Rules').setDescription(`
         \`1.\` Do not ping Direwolf! I can not stress this enough. There is a reason we have the <@&736945772028755998> role! 
         \`1.1.\` Do not ping people unless you know they do not mind being pinged. You can always ping <@196688486357663744> :grin:.
         \`2.\` Be respectful, be kind / friendly, do not be offensive, be as [PG-13](https://en.wikipedia.org/wiki/Motion_Picture_Association_film_rating_system#Ratings) as possible inside public channels.
@@ -27,9 +30,7 @@ export default class Rules {
         - **All rules will be enforced at the sole discretion of the Developers.**
       `);
 
-    const info = new MessageEmbed()
-      .setTitle('Info')
-      .setDescription(`
+    const info = new MessageEmbed().setTitle('Info').setDescription(`
       **Roles**
       Roles are given as the Developers see fit with the exception of the <@&546433718827352133> role as this is applied to anyone who has had a Pull Request pulled in.
       
@@ -48,7 +49,7 @@ export default class Rules {
       We are super strict with Pull Requests these days. Please do make one and discuss it on Github or Here but note that we're not being rude, we're just very specific about what we let into the project. We appreciate everyone that supports the project even if the PR gets rejected. We'd always recommend making any needed fixes and opening a new PR.
       `);
 
-    msg.channel.send(info)
-    msg.channel.send(rules)
+    message.channel.send(info);
+    message.channel.send(rules);
   }
 }

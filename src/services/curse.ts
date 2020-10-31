@@ -4,24 +4,34 @@ import NodeCache from 'node-cache';
 class Curse {
   constructor() {
     this.cache = new NodeCache({
-      stdTTL: 60 * 60 * 12, 
+      stdTTL: 60 * 60 * 12,
     });
 
     this.instance = Axios.create({
-      baseURL: 'https://addons-ecs.forgesvc.net/api/v2/'
-    })
+      baseURL: 'https://addons-ecs.forgesvc.net/api/v2/',
+    });
 
     this.instance.interceptors.response.use(null, (error) => {
       return Promise.reject({
         error,
-        data: error.response.data || null
+        data: error.response.data || null,
       });
     });
 
     this.mods = {
-      bg: {id: 298187, short: 'bg', name: 'Building Gadgets', slug: 'building-gadgets'},
-      mg: {id: 351748, short: 'mg', name: 'Mining Gadgets', slug: 'mining-gadgets'}
-    }
+      bg: {
+        id: 298187,
+        short: 'bg',
+        name: 'Building Gadgets',
+        slug: 'building-gadgets',
+      },
+      mg: {
+        id: 351748,
+        short: 'mg',
+        name: 'Mining Gadgets',
+        slug: 'mining-gadgets',
+      },
+    };
   }
 
   async getModInfo(mod) {
@@ -33,7 +43,7 @@ class Curse {
           return null;
         }
 
-        this.cache.set(key, res.data)
+        this.cache.set(key, res.data);
         return res.data;
       } catch {
         return null;
@@ -42,7 +52,7 @@ class Curse {
 
     return this.cache.get(key);
   }
-  
+
   async getModFiles(mod) {
     const key = `curse-${mod.short}-files`;
     if (!this.cache.has(key)) {
@@ -52,7 +62,7 @@ class Curse {
           return null;
         }
 
-        this.cache.set(key, res.data)
+        this.cache.set(key, res.data);
         return res.data;
       } catch {
         return null;
@@ -63,8 +73,8 @@ class Curse {
   }
 
   getProjectUrl(mod) {
-    return `https://www.curseforge.com/minecraft/mc-mods/${mod.slug}`
-  }  
+    return `https://www.curseforge.com/minecraft/mc-mods/${mod.slug}`;
+  }
 }
 
 export default new Curse();

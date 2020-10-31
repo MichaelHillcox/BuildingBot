@@ -1,20 +1,27 @@
-export default class Rules {
-  constructor() {
-    this.requiresAdmin = true;
-    this.command = "!echo <anything>";
-    this.description = "Posts anything you type after echo as the bot"
-  }
+import Command from './Command';
+import { Message } from 'discord.js';
 
-  parse(msg) {
-    const content = msg.content;
-    if (!content.startsWith('!echo') || !msg.member.hasPermission('ADMINISTRATOR')) {
+export default class Echo implements Command {
+  requiresAdmin = true;
+  command = '!echo <anything>';
+  description = 'Posts anything you type after echo as the bot';
+
+  async parse(
+    message: Message,
+    content: string,
+    command: string
+  ): Promise<void> {
+    if (
+      !content.startsWith('!echo') ||
+      !message.member?.hasPermission('ADMINISTRATOR')
+    ) {
       return;
     }
 
-    const message = content.split(' ');
-    message.shift(); // remove the first item;
-    const messageText = message.join(' ');
+    const spitContent: string[] = content.split(' ');
+    spitContent.shift(); // remove the first item;
+    const messageText = spitContent.join(' ');
 
-    msg.channel.send(messageText);
+    message.channel.send(messageText);
   }
 }
