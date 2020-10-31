@@ -6,11 +6,7 @@ export default class Help implements Command {
   command = '!help';
   description = 'Shows all the commands to do with the bot :D';
 
-  async parse(
-    message: Message,
-    content: string,
-    command: string
-  ): Promise<void> {
+  async parse(message: Message): Promise<void> {
     const context = message.content.toLowerCase();
     if (!context.startsWith(this.command)) {
       return;
@@ -21,7 +17,7 @@ export default class Help implements Command {
   }
 
   async sendMessages(msg: Message) {
-    const commands = bot.commands;
+    const { commands } = bot;
 
     msg.channel.send(
       new MessageEmbed().setDescription(

@@ -1,0 +1,6 @@
+[discord]
+token = 'your token'
+
+[github]
+owner = 'MichaelHillcox'
+repo = 'BuildingBot'

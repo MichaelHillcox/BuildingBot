@@ -37,7 +37,9 @@ class Bot {
       console.warn(`A websocket connection encountered an error: ${error}`)
     );
 
-    this.client.login(Config.discord.token);
+    this.client
+      .login(Config.config.discord.token)
+      .then(() => console.log('Bot logged in'));
   }
 
   handleMessage(msg: Message) {
