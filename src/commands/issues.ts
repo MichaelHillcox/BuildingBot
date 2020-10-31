@@ -32,8 +32,6 @@ export default class Issues implements Command {
   }
 
   async sendMessages(msg: Message, id: string) {
-    console.log(id, parseInt(id, 10));
-
     const issue = await github
       .getIssue(parseInt(id, 10))
       .catch(github.logAndNull);

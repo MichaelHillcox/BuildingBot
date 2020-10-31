@@ -1,3 +1,13 @@
+export type ModInfoData = {
+  github: string;
+  wiki: string;
+  changelog: string;
+};
+
+export type ModInfo = {
+  [key: string]: ModInfoData;
+};
+
 export default {
   bg: {
     github: 'https://github.com/Direwolf20-MC/BuildingGadgets',
@@ -12,4 +22,4 @@ export default {
     changelog:
       'https://github.com/Direwolf20-MC/MiningGadgets/blob/master/CHANGELOG.md',
   },
-};
+} as ModInfo;

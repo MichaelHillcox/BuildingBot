@@ -2,7 +2,7 @@ import Axios, { AxiosInstance } from 'axios';
 import NodeCache from 'node-cache';
 import { Addon, File } from './CurseResponse';
 
-type Mod = {
+export type Mod = {
   id: number;
   short: string;
   name: string;

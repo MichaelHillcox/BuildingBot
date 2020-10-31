@@ -34,8 +34,8 @@ class Github {
     });
   }
 
-  logAndNull(e: { data: unknown }) {
-    console.log(e.data);
+  logAndNull(e: any) {
+    console.log(e.errors || e);
     return null;
   }
 
