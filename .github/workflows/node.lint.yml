@@ -29,4 +29,6 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.KEY }}
-        script: /home/${{ secrets.USER }}/node/buildingbot/deploy.sh
+        script: |
+          chmod +x /home/${{ secrets.USER }}/node/buildingbots/deploy.sh
+          /home/${{ secrets.USER }}/node/buildingbot/deploy.sh
