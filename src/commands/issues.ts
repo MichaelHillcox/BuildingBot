@@ -1,19 +1,16 @@
 import moment from 'moment';
-import github from '../services/github';
 import { Message, MessageEmbed } from 'discord.js';
+import github from '../services/github';
 import Milestone from './milestone';
 import scanForReference from '../Utils';
 import Command from './Command';
 
 export default class Issues implements Command {
   public command = '{#issue_id}';
-  public description = '{#issue_id}';
+  public description =
+    'This is not a command, use by typing #number anywhere in your message.';
 
-  async parse(
-    message: Message,
-    content: string,
-    command: string
-  ): Promise<void> {
+  async parse(message: Message): Promise<void> {
     const refs = scanForReference(message.content);
     if (refs.length === 0) {
       return;
@@ -35,36 +32,41 @@ export default class Issues implements Command {
   }
 
   async sendMessages(msg: Message, id: string) {
-    let issue = await github.getIssue(id).catch(github.logAndNull);
+    console.log(id, parseInt(id, 10));
+
+    const issue = await github
+      .getIssue(parseInt(id, 10))
+      .catch(github.logAndNull);
 
     if (issue === null) {
       return;
     }
 
-    const data = issue.data;
+    const { data } = issue;
 
     // Count tasks if they exist.
     const tasks = { complete: 0, incomplete: 0 };
     data.body.split('\n').forEach((e: string) => {
       const line = e.trim().toLowerCase();
-      if (line.startsWith('- [ ]')) tasks.incomplete++;
-      if (line.startsWith('- [x]')) tasks.complete++;
+      if (line.startsWith('- [ ]')) tasks.incomplete += 1;
+      if (line.startsWith('- [x]')) tasks.complete += 1;
     });
 
+    let color = 3558108;
+    if (data.state === 'closed') {
+      color = 14432055;
+    } else if (data.pull_request) {
+      color = 2932302;
+    }
+
     const embed = new MessageEmbed()
-      .setColor(
-        data.state === 'closed'
-          ? 14432055
-          : data.pull_request
-          ? 2932302
-          : 3558108
-      )
+      .setColor(color)
       .setAuthor(data.user.login, data.user.avatar_url, data.user.html_url)
       .setTitle(
         `[${data.state}]${data.locked ? '[locked]' : ''}: ${data.title}`
       )
       .setDescription(
-        data.body.length > 220 ? data.body.substring(0, 220) + '...' : data.body
+        data.body.length > 220 ? `${data.body.substring(0, 220)}...` : data.body
       )
       .setURL(data.html_url)
       .addField('Created', moment(data.created_at).fromNow(), true);
@@ -87,7 +89,7 @@ export default class Issues implements Command {
         'Assignees',
         `${data.assignees
           .map(
-            (e: { login: string; html_url: string }) =>
+            (e) =>
               `[${e.login}](${e.html_url})`
           )
           .join(', ')}`,

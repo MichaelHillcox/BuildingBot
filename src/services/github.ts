@@ -1,57 +1,50 @@
-import Axios from 'axios';
+import { request } from '@octokit/request';
 import Config from '../config';
 
 class Github {
-  constructor() {
-    this.instance = Axios.create({
-      baseURL: Config.api.github,
-      headers: {
-        auth: {
-          username: 'michaelhillcox',
-          password: Config.api.github.token,
-        },
-        accept: 'application/vnd.github.v3+json',
-      },
-    });
+  private request = request.defaults({
+    headers: {
+      authorization: `token ${Config.github.token}`,
+      accept: 'application/vnd.github.v3+json',
+    },
+  });
 
-    this.instance.interceptors.response.use(null, (error) => {
-      // Do something with response error
-      return Promise.reject({
-        error,
-        data: error.response.data || null,
-      });
+  async getIssue(id: number) {
+    return this.request('GET /repos/:owner/:repo/issues/:issue_number', {
+      owner: Config.github.owner,
+      repo: Config.github.repo,
+      issue_number: id,
     });
   }
 
-  async getIssue(id) {
-    return this.instance.get(
-      `repos/${Config.github.owner}/${Config.github.repo}/issues/${id}`
-    );
+  async getMilestone(id: string) {
+    return this.request('GET /repos/:owner/:repo/issues', {
+      owner: Config.github.owner,
+      repo: Config.github.repo,
+      milestone: id,
+      state: 'all',
+    });
   }
 
-  async getMilestone(id) {
-    return this.instance.get(
-      `repos/${Config.github.owner}/${Config.github.repo}/issues?milestone=${id}&state=all`
-    );
+  async getCommit(sha: string) {
+    return this.request('GET /repos/:owner/:repo/commits/:ref', {
+      owner: Config.github.owner,
+      repo: Config.github.repo,
+      ref: sha,
+    });
   }
 
-  async getCommit(sha) {
-    return this.instance.get(
-      `repos/${Config.github.owner}/${Config.github.repo}/commits/${sha}`
-    );
-  }
-
-  logAndNull(e) {
+  logAndNull(e: { data: unknown }) {
     console.log(e.data);
     return null;
   }
 
-  createLabelLink(label) {
+  createLabelLink(label: string) {
     return encodeURI(
       `https://github.com/${Config.github.owner}/${
         Config.github.repo
       }/issues?q=is:issue+is:open+label:${
-        label.includes(' ') ? '"' + label + '"' : label
+        label.includes(' ') ? `"${label}"` : label
       }`
     );
   }

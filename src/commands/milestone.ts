@@ -7,11 +7,7 @@ export default class Milestone implements Command {
   command: string = '!milestone {milestone_id}';
   description: string = 'Displayed a detailed breakdown of a milestone';
 
-  async parse(
-    message: Message,
-    content: string,
-    command: string
-  ): Promise<void> {
+  async parse(message: Message, content: string): Promise<void> {
     if (!content.startsWith('!milestone')) {
       return;
     }
@@ -26,8 +22,9 @@ export default class Milestone implements Command {
 
   async sendMilestone(msg: Message, id: string): Promise<void> {
     const req = await github.getMilestone(id).catch(github.logAndNull);
-    const issues = req.data;
-    if (issues.length === 0) {
+    const issues = req?.data;
+
+    if (typeof issues === 'undefined' || issues.length === 0) {
       // Todo: maybe get the milestone regardless?
       msg.channel.send('This milestone contains no issues :(');
       return;
@@ -35,10 +32,10 @@ export default class Milestone implements Command {
 
     const { milestone } = issues[0];
 
-    const openIssues: string[] = [];
-    const closedIssues: string[] = [];
+    const openIssues: any[] = [];
+    const closedIssues: any[] = [];
 
-    issues.forEach((e: { state: string }) =>
+    issues.forEach((e) =>
       e.state === 'open' ? openIssues.push(e) : closedIssues.push(e)
     );
 
@@ -71,7 +68,7 @@ export default class Milestone implements Command {
         .setURL(milestone.html_url)
         .setDescription(
           description.length > 2000
-            ? description.substr(0, 2000) + '...'
+            ? `${description.substr(0, 2000)}...`
             : description
         )
         .addField(
@@ -81,7 +78,7 @@ export default class Milestone implements Command {
         )
         .addField(
           'Due',
-          milestone.due ? moment(milestone.due).fromNow() : 'No due date',
+          milestone.due_on ? moment(milestone.due_on).fromNow() : 'No due date',
           true
         )
         .addField(
@@ -94,7 +91,7 @@ export default class Milestone implements Command {
     );
   }
 
-  static milestoneProgress(milestone, issuesLength: number) {
+  static milestoneProgress(milestone: any, issuesLength: number) {
     if (milestone.open_issues === 0 && milestone.closed_issues) return 100;
 
     if (milestone.open_issues === issuesLength) return 0;

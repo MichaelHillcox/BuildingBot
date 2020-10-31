@@ -1,16 +1,12 @@
-import github from '../services/github';
 import { Message, MessageEmbed } from 'discord.js';
+import github from '../services/github';
 import Command from './Command';
 
 export default class Commits implements Command {
   command: string = '!commit {commit_sha}';
   description: string = 'Displays information about a commit hash';
 
-  async parse(
-    message: Message,
-    content: string,
-    command: string
-  ): Promise<void> {
+  async parse(message: Message, content: string): Promise<void> {
     if (!content.startsWith('!commit')) {
       return;
     }
@@ -25,7 +21,11 @@ export default class Commits implements Command {
 
   async commitMessage(msg: Message, sha: string) {
     const res = await github.getCommit(sha).catch(github.logAndNull);
-    const commit = res.data;
+    const commit = res?.data;
+
+    if (typeof commit === 'undefined') {
+      return;
+    }
 
     const messageParts = commit.commit.message.split('\n');
     const title = messageParts[0];
@@ -33,18 +33,19 @@ export default class Commits implements Command {
     // remove the title
     messageParts.shift();
     const message = messageParts.join('\n');
+
+    let formattedMessage = '';
+    if (messageParts.length) {
+      formattedMessage = message.startsWith('\n')
+        ? message.substr(1, message.length)
+        : message;
+    }
+
     const description = `
-      **Message**: ${
-        messageParts.length
-          ? message.startsWith('\n')
-            ? message.substr(1, message.length)
-            : message
-          : ''
-      }
-      **Author**: \`${commit.commit.author.name} / ${
-      commit.commit.author.email
-    }\`
+      **Message**: ${formattedMessage}
+      **Author**: \`${commit.commit.author.name} / ${commit.commit.author.email}\`
     `;
+
     msg.channel.send(
       new MessageEmbed()
         .setColor('#00a8ff')
