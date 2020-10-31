@@ -1,4 +1,19 @@
-module.exports = {
+type Config = {
+  discord: {
+    token: string;
+    channels: { [e: string]: string };
+  };
+  api: {
+    github: string;
+    discord: string;
+  };
+  github: {
+    owner: string;
+    repo: string;
+  };
+};
+
+export default {
   discord: {
     token: '',
     channels: {
@@ -13,6 +28,5 @@ module.exports = {
   github: {
     owner: 'Direwolf20-MC',
     repo: 'BuildingGadgets',
-    token: '',
   },
-};
+} as Config;
