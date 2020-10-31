@@ -1,7 +1,7 @@
-const github = require("./github");
-const { MessageEmbed } = require("discord.js");
+import github from '../services/github';
+import { MessageEmbed } from 'discord.js';
 
-module.exports = class Commits {
+export default class Commits {
   constructor() {
     this.command = "!commit {commit_sha}";
     this.description = "Displays information about a commit hash"

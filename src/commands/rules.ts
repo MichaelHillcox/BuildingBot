@@ -1,6 +1,6 @@
-const { MessageEmbed } = require("discord.js");
+import { MessageEmbed } from 'discord.js';
 
-module.exports = class Rules {
+export default class Rules {
   constructor() {
     this.requiresAdmin = true;
     this.command = "!rules";

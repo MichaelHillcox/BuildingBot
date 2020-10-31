@@ -1,8 +1,8 @@
-const github = require("./github");
-const moment = require('moment')
-const { MessageEmbed } = require("discord.js");
+import moment from 'moment';
+import { MessageEmbed } from 'discord.js';
+import github from '../services/github';
 
-module.exports = class Milestone {
+export default class Milestone {
   constructor() {
     this.command = "!milestone {milestone_id}";
     this.description = "Displayed a detailed breakdown of a milestone"

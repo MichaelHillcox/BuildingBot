@@ -1,5 +1,5 @@
-const Axios = require("axios");
-const Config = require('../config');
+import Axios from 'axios';
+import Config from '../config';
 
 class Github {
   constructor() {
@@ -45,4 +45,4 @@ class Github {
   }
 }
 
-module.exports = new Github();
+export default new Github();

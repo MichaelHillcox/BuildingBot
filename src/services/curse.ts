@@ -1,5 +1,5 @@
-const { default: Axios } = require("axios");
-const NodeCache = require("node-cache");
+import Axios from 'axios';
+import NodeCache from 'node-cache';
 
 class Curse {
   constructor() {
@@ -67,4 +67,4 @@ class Curse {
   }  
 }
 
-module.exports = new Curse();
+export default new Curse();

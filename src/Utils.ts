@@ -1,9 +1,9 @@
-module.exports.scanForReference = (msg) => {
-  matches = []
-  
-  reg = /^#[0-9]+| #[0-9]+/gm
+export const scanForReference = (msg: MEssage) => {
+  const matches = []
+  const reg = /^#[0-9]+| #[0-9]+/gm
+
+  let m;
   while ((m = reg.exec(msg)) !== null) {
-    // console.log(m)
     if (m.index === reg.lastIndex) {
       reg.lastIndex++;
     }
@@ -15,5 +15,5 @@ module.exports.scanForReference = (msg) => {
     });
   }
   
-  return matches
+  return matches;
 }

@@ -1,6 +1,6 @@
-const { MessageEmbed } = require('discord.js');
+import { MessageEmbed } from 'discord.js';
 
-module.exports = class Help {
+export default class Help {
   constructor() {
     this.command = "!help";
     this.description = "Shows all the commands to do with the bot :D"

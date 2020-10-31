@@ -1,10 +1,10 @@
-const curse = require("./curse");
-const { MessageEmbed } = require("discord.js");
-const prettyBytes = require('pretty-bytes');
-const moment = require('moment');
-const modinfo = require("./modinfo");
+import curse from '../services/curse';
+import { MessageEmbed } from 'discord.js';
+import prettyBytes from 'pretty-bytes';
+import moment from 'moment';
+import modinfo from '../services/modinfo';
 
-module.exports = class Mods {
+export default class Mods {
   constructor() {
     this.types = ['info', 'stats', 'files', 'links'];
     this.command = `!mod {${Object.keys(curse.mods).join('|')}} {${this.types.join('|')}}`;

@@ -1,17 +1,18 @@
-const Config = require('./config')
-const Discord = require('discord.js')
-const Issues = require('./app/issues');
-const Milestone = require('./app/milestone');
-const Commits = require('./app/commits');
-const Mods = require('./app/mods');
-const Echo = require('./app/echo');
-const Rules = require('./app/rules');
-const Help = require('./app/help');
+import Config from './config'
+import Discord from 'discord.js';
+import Issues from './commands/issues';
+import Help from './commands/help';
+import Rules from './commands/rules';
+import Echo from './commands/echo';
+import Mods from './commands/mods';
+import Commits from './commands/commits';
+import Milestone from './commands/milestone';
 
 class Bot {
+  public client: Discord.Client = new Discord.Client();
+
 
   constructor() {
-    this.client = new Discord.Client()
     this.commands = [
       new Issues(),
       new Milestone(),
@@ -46,4 +47,4 @@ class Bot {
   }
 }
   
-module.exports = new Bot();
+export default new Bot();

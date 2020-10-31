@@ -1,6 +1,4 @@
-const bot = require("../bot");
-
-module.exports = class Rules {
+export default class Rules {
   constructor() {
     this.requiresAdmin = true;
     this.command = "!echo <anything>";

@@ -1,3 +1,3 @@
-const Bot = require('./bot')
+import 'bot'
 
 console.log("Server started")

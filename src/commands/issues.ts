@@ -1,18 +1,17 @@
-const axios = require('axios')
-const moment = require('moment')
-const github = require('./github')
-const { MessageEmbed } = require('discord.js')
-const bot = require('../bot')
-const Milestone = require('./milestone')
-const ScanForReferences = require('./../Utils').scanForReference
+import axios from 'axios';
+import moment from 'moment';
+import github from '../services/github';
+import { Message, MessageEmbed } from 'discord.js';
+import Milestone from './milestone';
+import { scanForReference as ScanForReferences } from '../Utils';
 
-module.exports = class Issues {
+export default class Issues {
   constructor() {
     this.command = "{#issue_id}";
     this.description = "This is not a command, use by typing #number anywhere in your message."
   }
 
-  parse(msg) {
+  parse(msg: Message) {
     const refs = ScanForReferences(msg.content)
     if (refs.length === 0) {
       return;
