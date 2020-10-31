@@ -1,3 +1,3 @@
-import './bot.ts';
+import './bot';
 
 console.log('Server started');
