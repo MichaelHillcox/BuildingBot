@@ -1,6 +1,8 @@
 [discord]
 token = 'your token'
+canManageIssuesRole = ''
 
 [github]
 owner = 'MichaelHillcox'
 repo = 'BuildingBot'
+token = ''

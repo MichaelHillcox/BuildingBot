@@ -9,6 +9,7 @@ import Commits from './commands/commits';
 import Milestone from './commands/milestone';
 import Command from './commands/Command';
 import Issues from './commands/issues';
+import IssueManage from './commands/issueManage';
 
 class Bot {
   public client: Discord.Client = new Discord.Client();
@@ -20,6 +21,7 @@ class Bot {
     new Rules(),
     new Echo(),
     new Help(),
+    new IssueManage(),
   ];
 
   constructor() {

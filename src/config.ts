@@ -5,10 +5,12 @@ import path from 'path';
 type ConfigType = {
   discord: {
     token: string;
+    canManageIssuesRole: string;
   };
   github: {
     owner: string;
     repo: string;
+    token: string;
   };
 };
 

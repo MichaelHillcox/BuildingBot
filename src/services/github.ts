@@ -5,6 +5,7 @@ class Github {
   private request = request.defaults({
     headers: {
       accept: 'application/vnd.github.v3+json',
+      authorization: `token ${Config.config.github.token}`,
     },
   });
 
@@ -31,6 +32,36 @@ class Github {
       repo: Config.config.github.repo,
       ref: sha,
     });
+  }
+
+  async closeIssue(issueId: number) {
+    return this.request('PATCH /repos/:owner/:repo/issues/:issue_number', {
+      owner: Config.config.github.owner,
+      repo: Config.config.github.repo,
+      issue_number: issueId,
+      state: 'closed',
+    });
+  }
+
+  async openIssue(issueId: number) {
+    return this.request('PATCH /repos/:owner/:repo/issues/:issue_number', {
+      owner: Config.config.github.owner,
+      repo: Config.config.github.repo,
+      issue_number: issueId,
+      state: 'open',
+    });
+  }
+
+  async commentOn(issueId: number, message: string) {
+    return this.request(
+      'POST /repos/:owner/:repo/issues/:issue_number/comments',
+      {
+        owner: Config.config.github.owner,
+        repo: Config.config.github.repo,
+        issue_number: issueId,
+        body: message,
+      }
+    );
   }
 
   logAndNull(e: any) {
