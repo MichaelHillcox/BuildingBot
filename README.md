@@ -1,5 +1,5 @@
 # BuildingBot
-Building Bot is a simple discord bot created using Typescript and NodeJS to enable basic level intergration between our Github Repo and our Discord Server. This is a specific use discord bot meaning that it'll likely not fit your use-cases but it can be used as a good example on how to work with the Github, Discord, and Curse API.
+Building Bot is a simple discord bot created using Typescript and NodeJS to enable basic level intergration between our Github Repo and our Discord Server. This is a specific use discord bot meaning that it'll likely not fit your use-cases but it can be used as a good example on how to work with the Github, Discord, and Curse API (poorly).
 
 ## How to use
 So you still want to use it? Wow, okay, heres the basic low down on what to do.
